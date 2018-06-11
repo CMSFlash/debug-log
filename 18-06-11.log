@@ -1,0 +1,28 @@
+2018.5.26-6.11:
+1. round_middle.py: priority_value was switched to get_remainder(c) for sanity check yesterday. Switch back.
+2. round_middle.py: get_decimal(). int(x) replaces round(x).
+3. round_middle.py: maximize_rounding(). remainder now gets -1 once it reaches 0.5.
+4. round_middle.py: maximize_rounding(). Now it switches to appending if the heap-top remainder <=0.
+5. round_middle.py: Fix 3 didn't fix the defect upon the first pop. The logic is moved to RemainderGetter.
+6. round_middle.py: Fix 4 was wrong. Now maximize_rounding() only appends a single 1 if the heap-top remainder <=0.
+7. round_middle.py: Quality. Merge the special case for step>=0.5 into the main case.
+8. round_middle.py: During fix 7, discovered that changing from looping to recursion in fix 6 caused RecursionError for large cases.
+                    Switch to looping.
+9. round_middle.py: During fix 7, discovered that Python round() uses half-to-even instead of half-up.
+                    Implement round_half_up() to replace round().
+10. round_middle.py: During fix 7, discovered that fixes 3, 5 didn't fix the defect when remainder=0.5. Fix it.
+11. round_large.py: round_middle.py not fast enough. Replaced repeated retrievals from a heap by sorting and a single forward while-loop.
+12. round_large.py: Fix 11 caused appending 1s incorrectly when the current element has a negative remainder, similarly to defect 6.
+                    Add code to compute effient_block and append it.
+13. round_large.py: Fix 11 restored the special case removed in fix 7, and incorrectly used get_remainder(step)<0 rather than step>=0.5
+                    or get_remainder(1)<0, then created a very hard-to-hit defect which was hit by the 1273-th test case since very rarely
+                    do get_remainder(step)<0 and step>=0.5 hold together. Fix it.
+14. round_large.py: Fix 11 made the incorrect assumption that 100*effient_block/n<1 when computing effient_block, which created another
+                    very hard-to-hit defect that wasn't hit by the first 4000 test cases. Implement get_effient_block() and replace the
+                    old logic.
+15. round_large.py: get_effient_block() implemented in fix 14 didn't substitute the old logic, creating a defect hit by the 3246-th test
+                    case. Substitute it in.
+16. round_large.py: Fix 14 would run into an infinite loop when get_remainder(1)=0. Add special case for that.
+17. round_large.py: Not fast enough. Add special case for when the current count is below effient_block to speed up.
+18. round_large.py: Fix 17 was wrong, in that counts[i] was increased before referenced when the old value was desired. Swap the
+                    statements.
